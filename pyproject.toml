@@ -42,7 +42,7 @@ dev = [
 ]
 
 [project.scripts]
-receipt-reconciliation-server = "receipt_reconciliation.app:main"
+receipt-reconciliation-server = "server.app:main"
 
 [project.urls]
 Homepage = "https://github.com/vinaykotha5/receipt-reconciliation"
