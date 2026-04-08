@@ -1,3 +1,19 @@
+---
+title: Receipt Reconciliation Investigator
+emoji: 🧾
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+tags:
+  - openenv
+  - finance
+  - receipt
+  - reconciliation
+  - fraud-detection
+  - agent-environment
+---
+
 # Receipt Reconciliation Investigator
 
 **An OpenEnv environment for AI agent expense fraud detection and receipt reconciliation.**
