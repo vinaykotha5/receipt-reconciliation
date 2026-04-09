@@ -52,6 +52,26 @@ class StepRequest(BaseModel):
     confidence:   float           = 0.8
 
 
+@app.get("/")
+def root():
+    """Root endpoint for HF Spaces - provides API information."""
+    return {
+        "name": "Receipt Reconciliation Investigator",
+        "description": "OpenEnv environment for AI agent receipt reconciliation and fraud detection",
+        "version": "1.0.0",
+        "endpoints": {
+            "GET /": "This information page",
+            "GET /health": "Health check",
+            "GET /tasks": "List available tasks",
+            "POST /reset": "Reset environment with task_id",
+            "POST /step": "Execute action in environment",
+            "GET /state": "Get current environment state"
+        },
+        "tasks": ["task_easy", "task_medium", "task_hard"],
+        "status": "running"
+    }
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "env": "receipt-reconciliation", "version": "1.0.0"}
