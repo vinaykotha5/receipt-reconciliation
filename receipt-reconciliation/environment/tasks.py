@@ -454,6 +454,7 @@ def grade(task_id: str, findings: List[Finding]) -> Dict[str, Any]:
 
     # Confidence quality (reward high confidence on true positives)
     conf_quality = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0.5
+    conf_quality = max(conf_quality, 0.001)  # Ensure never 0.0
 
     # Final score
     score = (
