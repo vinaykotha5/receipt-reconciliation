@@ -14,7 +14,7 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
@@ -69,9 +69,7 @@ def list_tasks():
 
 
 @app.post("/reset")
-def reset(req: Optional[ResetRequest] = Body(None)):
-    if req is None:
-        req = ResetRequest()
+def reset(req: ResetRequest):
     try:
         obs = env.reset(task_id=req.task_id)
         return obs.model_dump()

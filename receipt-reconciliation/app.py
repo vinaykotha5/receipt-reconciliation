@@ -7,16 +7,10 @@ import os
 import subprocess
 import sys
 
-
-def main():
-    """Main entry point for the receipt-reconciliation-server command."""
+if __name__ == "__main__":
     port = os.environ.get("PORT", "7860")
     subprocess.run(
         [sys.executable, "-m", "uvicorn", "api.main:app",
          "--host", "0.0.0.0", "--port", port],
         check=True
     )
-
-
-if __name__ == "__main__":
-    main()

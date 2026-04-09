@@ -225,7 +225,7 @@ def run_task(task_id: str) -> dict:
     except Exception as e:
         log_step(1, "reset_failed", 0.0, True, str(e))
         log_end(success=False, steps=0, rewards=[0.0])
-        return {"task_id": task_id, "score": 0.0, "steps": 0, "success": False}
+        return {"task_id": task_id, "score": 0.001, "steps": 0, "success": False}
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
@@ -292,7 +292,7 @@ def run_task(task_id: str) -> dict:
 
         # Normalise to [0, 1]: use grader score if available, else mean step reward
         norm_score = final_score if final_score > 0.0 else (sum(rewards) / len(rewards))
-        norm_score = min(max(norm_score, 0.0), 1.0)
+        norm_score = min(max(norm_score, 0.001), 0.999)
         success    = norm_score >= SUCCESS_THRESHOLD
 
         # [END] format: success= steps= rewards=  (no score= field per spec)

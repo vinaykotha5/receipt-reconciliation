@@ -463,7 +463,7 @@ def grade(task_id: str, findings: List[Finding]) -> Dict[str, Any]:
         + 0.10 * conf_quality
         + (0.05 if has_submit else 0.0)
     )
-    score = max(0.0, min(1.0, round(score, 4)))
+    score = max(0.001, min(0.999, round(score, 4)))
 
     return {
         "score":          score,
