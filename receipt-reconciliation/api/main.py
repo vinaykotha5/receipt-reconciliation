@@ -40,7 +40,7 @@ env = ReceiptReconciliationEnv()
 
 
 class ResetRequest(BaseModel):
-    task_id: str = "task_easy"
+    task_id: Optional[str] = "task_easy"
 
 
 class StepRequest(BaseModel):
@@ -90,8 +90,9 @@ def list_tasks():
 
 @app.post("/reset")
 def reset(req: ResetRequest):
+    task_id = req.task_id or "task_easy"
     try:
-        obs = env.reset(task_id=req.task_id)
+        obs = env.reset(task_id=task_id)
         return obs.model_dump()
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
