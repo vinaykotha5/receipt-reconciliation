@@ -1,0 +1,52 @@
+name: receipt-reconciliation
+version: "1.0.0"
+description: >
+  An AI agent environment for receipt reconciliation investigation.
+  The agent receives expense reports paired with receipts and must
+  identify discrepancies, flag fraudulent claims, and produce a
+  structured audit report. Mirrors real-world accounts-payable workflows.
+tags:
+  - openenv
+  - finance
+  - reconciliation
+  - audit
+  - real-world
+author: receipt-recon-env
+tasks:
+  - id: task_easy
+    name: Single Receipt Match
+    difficulty: easy
+    description: Match one expense claim against one receipt. Identify if amounts, dates, and vendors align.
+  - id: task_medium
+    name: Multi-Receipt Expense Report
+    difficulty: medium
+    description: Reconcile a 5-item expense report against 5 receipts. Find mismatches, missing receipts, and duplicate claims.
+  - id: task_hard
+    name: Fraud Detection Audit
+    difficulty: hard
+    description: >
+      Audit a 10-item expense report with subtle fraud patterns:
+      split transactions to stay under approval thresholds, personal
+      expenses disguised as business meals, inflated amounts, and
+      duplicate submissions with altered dates.
+observation_space:
+  type: object
+  fields:
+    task_id: string
+    expense_report: list[ExpenseLineItem]
+    receipts: list[Receipt]
+    policy: ExpensePolicy
+    step_number: integer
+    max_steps: integer
+    previous_findings: list[Finding]
+action_space:
+  type: object
+  fields:
+    action_type: "flag_discrepancy | approve_item | request_info | submit_report"
+    item_id: string (optional)
+    finding_type: "amount_mismatch | date_mismatch | vendor_mismatch | missing_receipt | duplicate | policy_violation | suspicious_pattern | approved"
+    description: string
+    severity: "low | medium | high | critical"
+    confidence: float (0.0-1.0)
+reward_range: [0.0, 1.0]
+max_steps: 20
