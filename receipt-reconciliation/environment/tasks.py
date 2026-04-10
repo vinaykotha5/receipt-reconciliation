@@ -392,7 +392,7 @@ TASKS: Dict[str, Any] = {
 # GRADER
 # ══════════════════════════════════════════════════════════════════════════════
 
-def grade(task_id: str, findings: List[Finding]) -> Dict[str, Any]:
+def grade(task_id: str, findings: List[Finding], submitted: bool = False) -> Dict[str, Any]:
     """
     Deterministic grader. Returns score 0.0–1.0 with breakdown.
 
@@ -412,7 +412,7 @@ def grade(task_id: str, findings: List[Finding]) -> Dict[str, Any]:
 
     # Index agent findings by (item_id, finding_type)
     agent_flags: Dict[str, set] = {}
-    has_submit  = False
+    has_submit  = submitted
     confidence_scores = []
 
     for f in findings:
@@ -423,10 +423,7 @@ def grade(task_id: str, findings: List[Finding]) -> Dict[str, Any]:
         if f.finding_type != FindingType.APPROVED:
             confidence_scores.append(f.confidence)
 
-    # Check if agent submitted a report
-    for f in findings:
-        if hasattr(f, "_submitted") and f._submitted:
-            has_submit = True
+    # (submit status passed in directly via submitted=True from env.py)
 
     # Required recall
     req_hit = 0

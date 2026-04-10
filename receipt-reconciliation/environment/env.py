@@ -119,7 +119,7 @@ class ReceiptReconciliationEnv:
             # Final grading
             self._submitted = True
             self._done      = True
-            final = grade(self._task_id, self._findings)
+            final = grade(self._task_id, self._findings, submitted=True)
             reward_value     = final["score"]
             reward_breakdown = final
             message = (
