@@ -10,7 +10,7 @@ Required environment variables:
 STDOUT format (strict OpenEnv spec):
   [START] task=<task_name> env=<benchmark> model=<model_name>
   [STEP]  step=<n> action=<action_str> reward=<0.00> done=<true|false> error=<msg|null>
-  [END]   success=<true|false> steps=<n> rewards=<r1,r2,...,rn>
+  [END]   success=<true|false> steps=<n> score=<float> rewards=<r1,r2,...,rn>
 """
 
 import os
@@ -66,10 +66,10 @@ def log_step(step: int, action: str, reward: float, done: bool, error: Optional[
     )
 
 
-def log_end(success: bool, steps: int, rewards: List[float]) -> None:
-    rewards_str = ",".join(f"{r:.2f}" for r in rewards)
+def log_end(success: bool, steps: int, score: float, rewards: List[float]) -> None:
+    rewards_str = ",".join(f"{r:.4f}" for r in rewards)
     print(
-        f"[END] success={str(success).lower()} steps={steps} rewards={rewards_str}",
+        f"[END] success={str(success).lower()} steps={steps} score={score:.4f} rewards={rewards_str}",
         flush=True,
     )
 
@@ -224,7 +224,7 @@ def run_task(task_id: str) -> dict:
         obs = env_reset(task_id)
     except Exception as e:
         log_step(1, "reset_failed", 0.001, True, str(e))
-        log_end(success=False, steps=0, rewards=[0.001])
+        log_end(success=False, steps=0, score=0.001, rewards=[0.001])
         return {"task_id": task_id, "score": 0.001, "steps": 0, "success": False}
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
@@ -298,8 +298,8 @@ def run_task(task_id: str) -> dict:
         norm_score = min(max(norm_score, 0.001), 0.999)
         success    = norm_score >= SUCCESS_THRESHOLD
 
-        # [END] format: success= steps= rewards=  (no score= field per spec)
-        log_end(success=success, steps=steps_taken, rewards=rewards)
+        # [END] format: success= steps= score= rewards=
+        log_end(success=success, steps=steps_taken, score=norm_score, rewards=rewards)
 
     return {
         "task_id": task_id,
