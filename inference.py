@@ -223,8 +223,8 @@ def run_task(task_id: str) -> dict:
     try:
         obs = env_reset(task_id)
     except Exception as e:
-        log_step(1, "reset_failed", 0.0, True, str(e))
-        log_end(success=False, steps=0, rewards=[0.0])
+        log_step(1, "reset_failed", 0.001, True, str(e))
+        log_end(success=False, steps=0, rewards=[0.001])
         return {"task_id": task_id, "score": 0.001, "steps": 0, "success": False}
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
@@ -259,7 +259,7 @@ def run_task(task_id: str) -> dict:
                 reward = float(result["reward"]["value"])
                 done   = result["done"]
             except Exception as e:
-                reward    = 0.0
+                reward    = 0.001
                 done      = True
                 error_msg = str(e)
 
@@ -288,9 +288,12 @@ def run_task(task_id: str) -> dict:
 
     finally:
         if not rewards:
-            rewards = [0.0]
+            rewards = [0.001]
 
-        # Normalise to [0, 1]: use grader score if available, else mean step reward
+        # Clamp every collected reward to (0, 1) before logging
+        rewards = [min(max(r, 0.001), 0.999) for r in rewards]
+
+        # Normalise to (0, 1): use grader score if available, else mean step reward
         norm_score = final_score if final_score > 0.0 else (sum(rewards) / len(rewards))
         norm_score = min(max(norm_score, 0.001), 0.999)
         success    = norm_score >= SUCCESS_THRESHOLD
