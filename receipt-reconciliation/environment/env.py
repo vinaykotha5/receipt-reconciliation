@@ -139,7 +139,7 @@ class ReceiptReconciliationEnv:
 
         observation = self._build_observation(message=message)
         reward      = Reward(
-            value=round(max(0.0, min(1.0, reward_value)), 4),
+            value=round(max(0.001, min(0.999, reward_value)), 4),
             breakdown=reward_breakdown,
             reason=message
         )
